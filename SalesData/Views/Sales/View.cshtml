@@ -1,0 +1,96 @@
+﻿
+@model SalesData.Models.SalesDataModel
+@{
+    ViewBag.Title = "View";
+}
+<p></p>
+<table>
+</table>
+
+@using (Html.BeginForm("UploadFile", "Sales", FormMethod.Post, new
+{
+    enctype = "multipart/form-data"
+}))
+{
+    <div class="form-group">
+        @Html.ValidationSummary(Model.IsValid, "", new { @class = "text-danger" })
+        <div class="col-md-10">
+            @Html.Label("Select a file")
+        </div>
+        <div class="col-md-5">
+            @Html.TextBoxFor(model => model.SalesFile, new { type = "file", accept = "*.csv" })
+            @if (Model.IsValid && !string.IsNullOrEmpty(Model.Message))
+            {
+                <span class="text-success">@Model.Message</span>
+            }
+            else
+            {
+                <span class="text-danger">@Model.Message</span>
+            }
+        </div>
+        <div class="col-md-5">
+            <input type="submit" value="Upload" />
+        </div>
+
+        <br />
+    </div>
+    if (Model.deals.Count > 0)
+    {
+        <div class="col-md-10">
+            <div class="col-md-5">
+                @Html.Label("The Vehicle sold most often")
+            </div>
+            <div class="col-md-5">
+                @Model.MostPopular
+            </div>
+        </div>
+        
+        <div class="col-md-10" style="width: 100%;background-color: #f1f1c1;">
+            <table id="tableSalesDate">
+                <thead>
+                    <tr>
+                        <th class="col-md-2">
+                            Deal Number
+                        </th>
+                        <th class="col-md-2">Customer Name</th>
+                        <th class="col-md-2">Dealership Name</th>
+                        <th class="col-md-2">Vehicle</th>
+                        <th class="col-md-1">Price</th>
+                        <th class="col-md-2">Date</th>
+                    </tr>
+                </thead>
+
+                @foreach (var item in Model.deals)
+                {
+                    <tr>
+                        <td class="col-md-2">
+                            @item.DealNo
+                        </td>
+                        <td class="col-md-2">
+                            @item.CustomerName
+                        </td>
+                        <td class="col-md-2">
+                            @item.DealershipName
+                        </td>
+                        <td class="col-md-2">
+                            @item.Vehicle
+                        </td>
+                        <td class="col-md-1">
+                            @string.Format("CAD{0}", item.Price.ToString("c", System.Globalization.CultureInfo.GetCultureInfo("en-CA")))
+                        </td>
+                        <td class="col-md-2">
+                            @item.Date.ToString("d")
+                        </td>
+                    </tr>
+
+                }
+
+            </table>
+        </div>
+
+    }
+
+}
+
+
+
